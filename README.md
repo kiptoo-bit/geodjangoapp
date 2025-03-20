@@ -1,5 +1,4 @@
- Kenya Geospatial Data Visualization
-
+ Kenya Geospatial Data Visualization.
 This project is a web-based geospatial visualization tool that displays key geographical features of Kenya using Leaflet.js, Django, and Bootstrap. The map includes features such as counties, wetlands, towns, highland roads, and forest ranges. The tool allows users to interact with the map and download geospatial data in various formats (Shapefile and CSV).
 
  Features
