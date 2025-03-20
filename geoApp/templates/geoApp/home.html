@@ -1,0 +1,157 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Kenya Geospatial Data Visualization">
+  <meta name="author" content="Isaac Kiptoo">
+  <title>Kenya Data</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{% static '/bootstrap/css/bootstrap.min.css' %}">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 10px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+
+    /* Geolocation button styling */
+    .geolocate-btn {
+      position: absolute;
+      top: 100px;
+      left: 10px;
+      z-index: 1000;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .geolocate-btn:hover {
+      background: #0056b3;
+
+    }
+  
+    .download-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Align the buttons to the right */
+    z-index: 1000;
+    background: rgba(59, 149, 17, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.download-buttons .btn-shapefile {
+    background-color: #007bff; /* Blue for Shapefiles */
+    color: white;
+    margin-bottom: 5px;
+}
+
+.download-buttons .btn-csv {
+    background-color: #28a745; /* Green for CSV */
+    color: white;
+    margin-bottom: 5px;
+}
+
+.download-buttons .btn-sm {
+    width: 100%; /* Optional: Make the buttons full width */
+}
+
+  </style>
+</head>
+
+<body>
+
+<!-- Download Buttons -->
+<div class="download-buttons">
+  <h5>Downloads</h5>
+  <a href="{% url 'download_shapefile' 'Kenya_county_dd.shp' %}" class="btn btn-primary btn-sm">Counties.shp</a>
+  <a href="{% url 'download_csv' 'Kenya_county_dd.shp' %}" class="btn btn-secondary btn-sm">Counties.CSV</a>
+  <br>
+  <a href="{% url 'download_shapefile' 'kenya_wetlands.shp' %}" class="btn btn-primary btn-sm">Wetlands.shp</a>
+  <a href="{% url 'download_csv' 'kenya_wetlands.shp' %}" class="btn btn-secondary btn-sm">Wetlands.CSV</a>
+  <br>
+  <a href="{% url 'download_shapefile' 'kenya_all_towns.shp' %}" class="btn btn-primary btn-sm">Towns.shp</a>
+  <a href="{% url 'download_csv' 'kenya_all_towns.shp' %}" class="btn btn-secondary btn-sm">Towns.CSV</a>
+  <br>
+  <a href="{% url 'download_shapefile' 'kenya_highland_roads.shp' %}" class="btn btn-primary btn-sm">Roads.shp</a>
+  <a href="{% url 'download_csv' 'kenya_highland_roads.shp' %}" class="btn btn-secondary btn-sm">Roads.CSV</a>
+  <br>
+  <a href="{% url 'download_shapefile' 'kenya_forestranges.shp' %}" class="btn btn-primary btn-sm">Forest .shp</a>
+  <a href="{% url 'download_csv' 'kenya_forestranges.shp' %}" class="btn btn-secondary btn-sm">Forest .CSV</a>
+</div>
+  <!-- Map Container -->
+  <div id="map">
+    {{ my_map|safe }}
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">Developed by Isaac Kiptoo</div>
+
+  <!-- Leaflet and Bootstrap JavaScript -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{% static '/jquery/jquery.slim.min.js' %}"></script>
+  <script src="{% static '/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Geolocation Function -->
+  <script>
+    function locateUser() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude;
+          var lon = position.coords.longitude;
+
+          // Add a marker for the user's location
+          var userMarker = L.marker([lat, lon]).addTo(map)
+            .bindPopup("You are here").openPopup();
+
+          // Add accuracy circle
+          var accuracyCircle = L.circle([lat, lon], {
+            color: 'blue',
+            fillColor: '#30f',
+            fillOpacity: 0.2,
+            radius: position.coords.accuracy
+          }).addTo(map);
+
+          // Center the map on the user's location
+          map.setView([lat, lon], 12);
+        }, function (error) {
+          alert("Geolocation failed: " + error.message);
+        });
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+  </script>
+
+</body>
+</html>
