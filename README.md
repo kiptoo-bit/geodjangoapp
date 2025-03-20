@@ -1,5 +1,3 @@
-# Geodjangoapp
-
 Simple Geodjangoapp with Kenya Data overlaid
 
 Access the live version of the geospatial application here: http://kimutailawrence.pythonanywhere.com/
